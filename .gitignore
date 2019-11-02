@@ -124,4 +124,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.idea/git remote add origin https://github.com/khashayarghamati/Statistics_Tools.git
+.idea/
