@@ -1,5 +1,10 @@
+import random
+
 __author__ = 'Khashayar'
 __email__ = 'khashayarghamati@gmail.com'
+
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Statistics(object):
@@ -56,6 +61,23 @@ class Statistics(object):
 
         return result
 
+    def draw_plot_of_distribution_function(self,
+                                           rv,
+                                           sigma_field):
+
+        if (self.is_sigma_field(sigma_set=sigma_field) and
+                self.is_rv_valid(rv.copy(), sigma_field)):
+
+            rv_value = sorted([x[1] for x in rv])
+            probability = sorted([random.random() for e in rv_value])
+
+            x = np.array(rv_value)
+            y = np.array(probability)
+
+            plt.step(x, y, )
+            plt.plot(x, y, 'C0o', alpha=0.5)
+            plt.show()
+
 
 if __name__ == '__main__':
     omega = [1, 2, 3]
@@ -75,6 +97,7 @@ if __name__ == '__main__':
 
     print("1 -> check sigma field")
     print("2 -> check random variable")
+    print("3 -> drew distribution function")
 
     c = int(input("Choose an item: "))
 
@@ -84,6 +107,11 @@ if __name__ == '__main__':
         r = s.is_sigma_field(sigma_set=sigma)
     elif c == 2:
         r = s.is_rv_valid(rv, sigma)
+    elif c == 3:
+        s.draw_plot_of_distribution_function(
+            rv=rv,
+            sigma_field=sigma
+        )
     else:
         print("command is not valid")
 
