@@ -93,7 +93,7 @@ class Statistics(object):
                 ax.hlines(dis_p, xmin=xmin, xmax=xmax)
                 plt.show()
 
-            return rv_value, probability
+            return rv_value, dis_p
 
         return None, None
 
