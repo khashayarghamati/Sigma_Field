@@ -72,12 +72,25 @@ class Statistics(object):
                 sum_p += i
                 dis_p.append(sum_p)
 
-            x = np.array(rv_value)
-            y = np.array(dis_p)
-
             if not isEstimate:
-                plt.step(x, y)
-                plt.plot(x, y, 'C0o', alpha=0.5)
+                xmin = []
+                xmax = []
+                for i in range(len(rv_value)):
+                    if i%2 == 0:
+                        xmin.append(rv_value[i]-1)
+                    else:
+                        xmax.append(rv_value[i]-0.1)
+
+                if len(xmin) != len(xmax):
+                    if len(xmax)< len(xmin):
+                        xmax.append(xmax[len(xmax)-1]+1)
+                    else:
+                        xmin.append(xmin[len(xmin)-1] + 1)
+
+                xmin.append(xmin[len(xmin)-1]+1)
+                xmax.append(xmax[len(xmax)-1]+1)
+                fig, ax = plt.subplots(1, 1)
+                ax.hlines(dis_p, xmin=xmin, xmax=xmax)
                 plt.show()
 
             return rv_value, probability
