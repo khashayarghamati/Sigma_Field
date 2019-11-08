@@ -1,10 +1,8 @@
-import random
-
 __author__ = 'Khashayar'
 __email__ = 'khashayarghamati@gmail.com'
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Statistics(object):
@@ -56,33 +54,59 @@ class Statistics(object):
     def get_same_indices(self, rv, value):
         result = [x[0] for i, x in enumerate(rv) if x[1] == value]
 
-        for i in result:
-            rv.remove((i, value))
-
         return result
 
     def draw_plot_of_distribution_function(self,
                                            rv,
-                                           sigma_field):
+                                           sigma_field,
+                                           isEstimate=False):
 
         if (self.is_sigma_field(sigma_set=sigma_field) and
                 self.is_rv_valid(rv.copy(), sigma_field)):
 
             rv_value = sorted([x[1] for x in rv])
-            probability = sorted([random.random() for e in rv_value])
+            probability = sorted([1 / len(self.omega_set) for e in rv_value])
+            sum_p = 0
+            dis_p = []
+            for i in probability:
+                sum_p += i
+                dis_p.append(sum_p)
 
             x = np.array(rv_value)
-            y = np.array(probability)
+            y = np.array(dis_p)
 
-            plt.step(x, y, )
-            plt.plot(x, y, 'C0o', alpha=0.5)
-            plt.show()
+            if not isEstimate:
+                plt.step(x, y)
+                plt.plot(x, y, 'C0o', alpha=0.5)
+                plt.show()
+
+            return rv_value, probability
+
+        return None, None
+
+    def draw_density(self, rv, probability):
+
+        x = np.array(rv)
+        y = np.array(probability)
+        plt.plot(x, y, 'C0o', alpha=1)
+        plt.show()
+
+    def estimate_expected_value(self, rv, probability):
+        expect = 0
+        for i in range(len(rv)):
+            expect += rv[0] * probability[0]
+
+        return expect
 
 
 if __name__ == '__main__':
     omega = [1, 2, 3]
     sigma = [
         [1],
+        [2],
+        [3],
+        [1, 2],
+        [1, 3],
         [2, 3],
         [1, 2, 3],
         []
@@ -91,27 +115,52 @@ if __name__ == '__main__':
     rv = [
         (1, 3),  # that's mean: X(1)=3
         (2, 4),  # that's mean: X(2)=4
+        (3, 5),  # that's mean: X(3)=5
     ]
 
     s = Statistics(omega_set=omega)
 
     print("1 -> check sigma field")
     print("2 -> check random variable")
-    print("3 -> drew distribution function")
+    print("3 -> draw distribution function")
+    print("4 -> draw density function")
+    print("5 -> estimate expect value")
 
     c = int(input("Choose an item: "))
 
     r = None
+    sorted_rv, p = None, None
 
     if c == 1:
         r = s.is_sigma_field(sigma_set=sigma)
     elif c == 2:
         r = s.is_rv_valid(rv, sigma)
     elif c == 3:
-        s.draw_plot_of_distribution_function(
+        sorted_rv, p = s.draw_plot_of_distribution_function(
             rv=rv,
             sigma_field=sigma
         )
+    elif c == 4:
+        sorted_rv, p = s.draw_plot_of_distribution_function(
+            rv=rv,
+            sigma_field=sigma,
+            isEstimate=True
+
+        )
+        if sorted_rv and p:
+            s.draw_density(sorted_rv, p)
+        else:
+            print('R.V and P not found')
+    elif c == 5:
+        sorted_rv, p = s.draw_plot_of_distribution_function(
+            rv=rv,
+            sigma_field=sigma,
+            isEstimate=True
+
+        )
+        if sorted_rv and p:
+            expect = s.estimate_expected_value(sorted_rv, p)
+            print(f"Expect Value is : {expect}")
     else:
         print("command is not valid")
 
