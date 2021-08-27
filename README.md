@@ -1,6 +1,6 @@
 # Check Sigma-filed and random variables
 
-there are two functions which they check a sigma-field and some r.v.
+there are two functions which they will check a sigma-field and some random variables.
 
 
 # Usage:
